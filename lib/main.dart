@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
@@ -86,12 +88,21 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  Future<String> saveWallpaperVideo(String sourcePath) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final savedFile = await File(sourcePath).copy(
+      '${directory.path}/live_wallpaper_video.mp4',
+    );
+    return savedFile.path;
+  }
+
   int page = 0;
   String category = 'All';
   String language = 'English';
   final Set<String> favorites = {};
   File? selectedImage;
   VideoPlayerController? videoController;
+  String? savedVideoPath;
 
   final categories = [
     'All',
@@ -570,6 +581,7 @@ class _MainScreenState extends State<MainScreen> {
               );
 
               try {
+                final savedPath = await saveWallpaperVideo(pickedFile.path);
                 await controller.initialize();
 
                 if (!mounted) {
@@ -581,6 +593,7 @@ class _MainScreenState extends State<MainScreen> {
                 setState(() {
                   selectedImage = null;
                   videoController = controller;
+                  savedVideoPath = savedPath;
                 });
                 await oldController?.dispose();
               } catch (e) {
@@ -639,9 +652,37 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           ],
+
+          if (savedVideoPath != null) ...[
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: setAsLiveWallpaper,
+                icon: const Icon(Icons.wallpaper),
+                label: const Text('Set Live Wallpaper'),
+              ),
+            ),
+          ],
         ],
       ),
     );
+  }
+
+
+  Future<void> setAsLiveWallpaper() async {
+    if (savedVideoPath == null) return;
+
+    try {
+      await const MethodChannel('live_wallpaper_pro/wallpaper')
+          .invokeMethod('setWallpaper', {'path': savedVideoPath});
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not open wallpaper settings: $e')),
+        );
+      }
+    }
   }
 
   Widget settingsPage() {
