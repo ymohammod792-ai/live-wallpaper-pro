@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
 
 void main() {
   runApp(const LiveWallpaperApp());
@@ -20,22 +22,38 @@ class Wallpaper {
 }
 
 const wallpapers = [
-  Wallpaper('Galaxy Dream', 'Galaxy', Icons.blur_circular,
-      [Color(0xFF32116B), Color(0xFF071A48)]),
-  Wallpaper('Deep Nature', 'Nature', Icons.forest,
-      [Color(0xFF075B42), Color(0xFF071D25)]),
-  Wallpaper('Rainy Night', 'Rain', Icons.water_drop,
-      [Color(0xFF174D78), Color(0xFF091528)]),
-  Wallpaper('Dark Horror', 'Horror', Icons.nightlight,
-      [Color(0xFF7B171F), Color(0xFF160912)]),
-  Wallpaper('Neon Abstract', 'Abstract', Icons.auto_awesome,
-      [Color(0xFF7137A8), Color(0xFF101B50)]),
-  Wallpaper('3D Universe', '3D', Icons.public,
-      [Color(0xFF126E91), Color(0xFF17134D)]),
-  Wallpaper('Green Forest', 'Nature', Icons.park,
-      [Color(0xFF286C38), Color(0xFF10251A)]),
-  Wallpaper('Galaxy Blue', 'Galaxy', Icons.stars,
-      [Color(0xFF1554A0), Color(0xFF100C37)]),
+  Wallpaper('Galaxy Dream', 'Galaxy', Icons.blur_circular, [
+    Color(0xFF32116B),
+    Color(0xFF071A48),
+  ]),
+  Wallpaper('Deep Nature', 'Nature', Icons.forest, [
+    Color(0xFF075B42),
+    Color(0xFF071D25),
+  ]),
+  Wallpaper('Rainy Night', 'Rain', Icons.water_drop, [
+    Color(0xFF174D78),
+    Color(0xFF091528),
+  ]),
+  Wallpaper('Dark Horror', 'Horror', Icons.nightlight, [
+    Color(0xFF7B171F),
+    Color(0xFF160912),
+  ]),
+  Wallpaper('Neon Abstract', 'Abstract', Icons.auto_awesome, [
+    Color(0xFF7137A8),
+    Color(0xFF101B50),
+  ]),
+  Wallpaper('3D Universe', '3D', Icons.public, [
+    Color(0xFF126E91),
+    Color(0xFF17134D),
+  ]),
+  Wallpaper('Green Forest', 'Nature', Icons.park, [
+    Color(0xFF286C38),
+    Color(0xFF10251A),
+  ]),
+  Wallpaper('Galaxy Blue', 'Galaxy', Icons.stars, [
+    Color(0xFF1554A0),
+    Color(0xFF100C37),
+  ]),
 ];
 
 class LiveWallpaperApp extends StatelessWidget {
@@ -73,16 +91,26 @@ class _MainScreenState extends State<MainScreen> {
   String language = 'English';
   final Set<String> favorites = {};
   File? selectedImage;
+  VideoPlayerController? videoController;
 
   final categories = [
-    'All', '2D', '3D', 'Nature', 'Rain',
-    'Galaxy', 'Horror', 'Abstract'
+    'All',
+    '2D',
+    '3D',
+    'Nature',
+    'Rain',
+    'Galaxy',
+    'Horror',
+    'Abstract',
   ];
 
   final translations = {
     'English': {
-      'home': 'Home', 'gallery': 'Gallery', 'create': 'Create',
-      'favorites': 'Favorites', 'settings': 'Settings',
+      'home': 'Home',
+      'gallery': 'Gallery',
+      'create': 'Create',
+      'favorites': 'Favorites',
+      'settings': 'Settings',
       'welcome': 'Discover your world',
       'subtitle': 'Beautiful wallpapers for your screen',
       'featured': 'Featured Wallpapers',
@@ -96,8 +124,11 @@ class _MainScreenState extends State<MainScreen> {
       'language': 'Language',
     },
     'বাংলা': {
-      'home': 'হোম', 'gallery': 'গ্যালারি', 'create': 'তৈরি',
-      'favorites': 'পছন্দের', 'settings': 'সেটিংস',
+      'home': 'হোম',
+      'gallery': 'গ্যালারি',
+      'create': 'তৈরি',
+      'favorites': 'পছন্দের',
+      'settings': 'সেটিংস',
       'welcome': 'আপনার নতুন জগৎ আবিষ্কার করুন',
       'subtitle': 'আপনার স্ক্রিনের জন্য সুন্দর ওয়ালপেপার',
       'featured': 'বিশেষ ওয়ালপেপার',
@@ -111,8 +142,11 @@ class _MainScreenState extends State<MainScreen> {
       'language': 'ভাষা',
     },
     'Arabic': {
-      'home': 'الرئيسية', 'gallery': 'المعرض', 'create': 'إنشاء',
-      'favorites': 'المفضلة', 'settings': 'الإعدادات',
+      'home': 'الرئيسية',
+      'gallery': 'المعرض',
+      'create': 'إنشاء',
+      'favorites': 'المفضلة',
+      'settings': 'الإعدادات',
       'welcome': 'اكتشف عالمك',
       'subtitle': 'خلفيات جميلة لشاشتك',
       'featured': 'خلفيات مميزة',
@@ -127,8 +161,7 @@ class _MainScreenState extends State<MainScreen> {
     },
   };
 
-  String tr(String key) =>
-      translations[language]?[key] ?? key;
+  String tr(String key) => translations[language]?[key] ?? key;
 
   void toggleFavorite(Wallpaper wallpaper) {
     setState(() {
@@ -143,13 +176,17 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final labels = [
-      tr('home'), tr('gallery'), tr('create'),
-      tr('favorites'), tr('settings')
+      tr('home'),
+      tr('gallery'),
+      tr('create'),
+      tr('favorites'),
+      tr('settings'),
     ];
 
     return Directionality(
-      textDirection:
-          language == 'Arabic' ? TextDirection.rtl : TextDirection.ltr,
+      textDirection: language == 'Arabic'
+          ? TextDirection.rtl
+          : TextDirection.ltr,
       child: Scaffold(
         body: SafeArea(
           child: IndexedStack(
@@ -172,22 +209,27 @@ class _MainScreenState extends State<MainScreen> {
           },
           destinations: [
             NavigationDestination(
-                icon: const Icon(Icons.home_outlined),
-                selectedIcon: const Icon(Icons.home),
-                label: labels[0]),
+              icon: const Icon(Icons.home_outlined),
+              selectedIcon: const Icon(Icons.home),
+              label: labels[0],
+            ),
             NavigationDestination(
-                icon: const Icon(Icons.grid_view_rounded),
-                label: labels[1]),
+              icon: const Icon(Icons.grid_view_rounded),
+              label: labels[1],
+            ),
             NavigationDestination(
-                icon: const Icon(Icons.add_circle_outline),
-                label: labels[2]),
+              icon: const Icon(Icons.add_circle_outline),
+              label: labels[2],
+            ),
             NavigationDestination(
-                icon: const Icon(Icons.favorite_border),
-                selectedIcon: const Icon(Icons.favorite),
-                label: labels[3]),
+              icon: const Icon(Icons.favorite_border),
+              selectedIcon: const Icon(Icons.favorite),
+              label: labels[3],
+            ),
             NavigationDestination(
-                icon: const Icon(Icons.settings_outlined),
-                label: labels[4]),
+              icon: const Icon(Icons.settings_outlined),
+              label: labels[4],
+            ),
           ],
         ),
       ),
@@ -203,12 +245,14 @@ class _MainScreenState extends State<MainScreen> {
             const Icon(Icons.blur_on, color: accent, size: 34),
             const SizedBox(width: 10),
             const Expanded(
-              child: Text('LIVE WALLPAPER PRO',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                    fontSize: 16,
-                  )),
+              child: Text(
+                'LIVE WALLPAPER PRO',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                  fontSize: 16,
+                ),
+              ),
             ),
             IconButton(
               onPressed: () => setState(() => page = 4),
@@ -217,12 +261,12 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         const SizedBox(height: 25),
-        Text(tr('welcome'),
-            style: const TextStyle(
-                fontSize: 25, fontWeight: FontWeight.bold)),
+        Text(
+          tr('welcome'),
+          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 8),
-        Text(tr('subtitle'),
-            style: const TextStyle(color: Colors.white60)),
+        Text(tr('subtitle'), style: const TextStyle(color: Colors.white60)),
         const SizedBox(height: 24),
         sectionTitle(tr('featured')),
         featuredCard(),
@@ -259,9 +303,10 @@ class _MainScreenState extends State<MainScreen> {
   Widget sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
-      child: Text(title,
-          style: const TextStyle(
-              fontSize: 19, fontWeight: FontWeight.bold)),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+      ),
     );
   }
 
@@ -282,8 +327,11 @@ class _MainScreenState extends State<MainScreen> {
         child: Stack(
           children: [
             const Center(
-              child: Icon(Icons.blur_circular,
-                  size: 105, color: Colors.white24),
+              child: Icon(
+                Icons.blur_circular,
+                size: 105,
+                color: Colors.white24,
+              ),
             ),
             Positioned(
               left: 18,
@@ -291,13 +339,17 @@ class _MainScreenState extends State<MainScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('GALAXY COLLECTION',
-                      style: TextStyle(
-                          letterSpacing: 1.5, fontSize: 11)),
-                  Text(wallpaper.title,
-                      style: const TextStyle(
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold)),
+                  const Text(
+                    'GALAXY COLLECTION',
+                    style: TextStyle(letterSpacing: 1.5, fontSize: 11),
+                  ),
+                  Text(
+                    wallpaper.title,
+                    style: const TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -320,9 +372,10 @@ class _MainScreenState extends State<MainScreen> {
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
-        Text(tr('gallery'),
-            style: const TextStyle(
-                fontSize: 26, fontWeight: FontWeight.bold)),
+        Text(
+          tr('gallery'),
+          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 20),
         SizedBox(
           height: 48,
@@ -379,8 +432,7 @@ class _MainScreenState extends State<MainScreen> {
             child: Stack(
               children: [
                 Center(
-                  child: Icon(wallpaper.icon,
-                      size: 75, color: Colors.white30),
+                  child: Icon(wallpaper.icon, size: 75, color: Colors.white30),
                 ),
                 Positioned(
                   top: 6,
@@ -399,12 +451,17 @@ class _MainScreenState extends State<MainScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(wallpaper.title,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold)),
-                      Text(wallpaper.category,
-                          style: const TextStyle(
-                              color: Colors.white70, fontSize: 12)),
+                      Text(
+                        wallpaper.title,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        wallpaper.category,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -417,29 +474,33 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget favoritesPage() {
-    final saved = wallpapers
-        .where((w) => favorites.contains(w.title))
-        .toList();
+    final saved = wallpapers.where((w) => favorites.contains(w.title)).toList();
 
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
-        Text(tr('favorites'),
-            style: const TextStyle(
-                fontSize: 26, fontWeight: FontWeight.bold)),
+        Text(
+          tr('favorites'),
+          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 25),
         if (saved.isEmpty)
           Center(
             child: Column(
               children: [
                 const SizedBox(height: 80),
-                const Icon(Icons.favorite_border,
-                    size: 65, color: Colors.white38),
+                const Icon(
+                  Icons.favorite_border,
+                  size: 65,
+                  color: Colors.white38,
+                ),
                 const SizedBox(height: 15),
                 Text(tr('empty')),
                 const SizedBox(height: 8),
-                Text(tr('emptySub'),
-                    style: const TextStyle(color: Colors.white54)),
+                Text(
+                  tr('emptySub'),
+                  style: const TextStyle(color: Colors.white54),
+                ),
               ],
             ),
           )
@@ -449,54 +510,136 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  @override
+  void dispose() {
+    videoController?.dispose();
+    super.dispose();
+  }
+
   Widget createPage() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(25),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.wallpaper, size: 85, color: accent),
-            const SizedBox(height: 20),
-            Text(tr('create'),
-                style: const TextStyle(
-                    fontSize: 25, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            const Text(
-              'Create your own wallpaper using photos, videos and effects.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white60),
-            ),
-            const SizedBox(height: 25),
-            FilledButton.icon(
-              onPressed: () async {
-                final picker = ImagePicker();
-                final pickedFile = await picker.pickImage(
-                  source: ImageSource.gallery,
-                );
-                if (pickedFile != null && mounted) {
-                  setState(() {
-                    selectedImage = File(pickedFile.path);
-                  });
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.wallpaper, size: 85, color: accent),
+          const SizedBox(height: 20),
+          Text(
+            tr('create'),
+            style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'Create your own wallpaper using photos, videos and effects.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white60),
+          ),
+          const SizedBox(height: 25),
+
+          FilledButton.icon(
+            onPressed: () async {
+              final pickedFile = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+              );
+
+              if (pickedFile != null && mounted) {
+                final oldController = videoController;
+                setState(() {
+                  selectedImage = File(pickedFile.path);
+                  videoController = null;
+                });
+                await oldController?.dispose();
+              }
+            },
+            icon: const Icon(Icons.add_photo_alternate),
+            label: const Text('Choose Photo'),
+          ),
+
+          const SizedBox(height: 12),
+
+          FilledButton.icon(
+            onPressed: () async {
+              final pickedFile = await ImagePicker().pickVideo(
+                source: ImageSource.gallery,
+              );
+
+              if (pickedFile == null || !mounted) return;
+
+              final controller = VideoPlayerController.file(
+                File(pickedFile.path),
+              );
+
+              try {
+                await controller.initialize();
+
+                if (!mounted) {
+                  await controller.dispose();
+                  return;
                 }
-              },
-              icon: const Icon(Icons.add_photo_alternate),
-              label: const Text('Choose Photo'),
-            ),
-            if (selectedImage != null) ...[
-              const SizedBox(height: 16),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.file(
-                  selectedImage!,
-                  height: 220,
-                  width: double.infinity,
-                  fit: BoxFit.contain,
-                ),
+
+                final oldController = videoController;
+                setState(() {
+                  selectedImage = null;
+                  videoController = controller;
+                });
+                await oldController?.dispose();
+              } catch (e) {
+                await controller.dispose();
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Could not load this video')),
+                  );
+                }
+              }
+            },
+            icon: const Icon(Icons.video_library),
+            label: const Text('Choose Video'),
+          ),
+
+          if (selectedImage != null) ...[
+            const SizedBox(height: 16),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.file(
+                selectedImage!,
+                height: 220,
+                width: double.infinity,
+                fit: BoxFit.contain,
               ),
-            ],
+            ),
           ],
-        ),
+
+          if (videoController != null &&
+              videoController!.value.isInitialized) ...[
+            const SizedBox(height: 16),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: AspectRatio(
+                aspectRatio: videoController!.value.aspectRatio,
+                child: VideoPlayer(videoController!),
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                final controller = videoController!;
+                setState(() {
+                  if (controller.value.isPlaying) {
+                    controller.pause();
+                  } else {
+                    controller.play();
+                  }
+                });
+              },
+              icon: Icon(
+                videoController!.value.isPlaying
+                    ? Icons.pause_circle
+                    : Icons.play_circle,
+                size: 45,
+                color: accent,
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -505,9 +648,10 @@ class _MainScreenState extends State<MainScreen> {
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
-        Text(tr('settings'),
-            style: const TextStyle(
-                fontSize: 26, fontWeight: FontWeight.bold)),
+        Text(
+          tr('settings'),
+          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 25),
         ListTile(
           leading: const Icon(Icons.language, color: accent),
@@ -517,10 +661,7 @@ class _MainScreenState extends State<MainScreen> {
             value: language,
             dropdownColor: panel,
             items: ['English', 'বাংলা', 'Arabic'].map((lang) {
-              return DropdownMenuItem(
-                value: lang,
-                child: Text(lang),
-              );
+              return DropdownMenuItem(value: lang, child: Text(lang));
             }).toList(),
             onChanged: (value) {
               if (value != null) {
@@ -550,9 +691,13 @@ class _MainScreenState extends State<MainScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(tr('preview'),
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold)),
+                Text(
+                  tr('preview'),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 15),
                 Container(
                   height: 300,
@@ -565,19 +710,16 @@ class _MainScreenState extends State<MainScreen> {
                       end: Alignment.bottomRight,
                     ),
                   ),
-                  child: Icon(wallpaper.icon,
-                      size: 100, color: Colors.white38),
+                  child: Icon(wallpaper.icon, size: 100, color: Colors.white38),
                 ),
                 const SizedBox(height: 15),
-                Text(wallpaper.title,
-                    style: const TextStyle(fontSize: 18)),
+                Text(wallpaper.title, style: const TextStyle(fontSize: 18)),
                 const SizedBox(height: 15),
                 FilledButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(this.context).showSnackBar(
-                      SnackBar(content: Text(tr('coming'))),
-                    );
+                    ScaffoldMessenger.of(this.context)
+                        .showSnackBar(SnackBar(content: Text(tr('coming'))));
                   },
                   child: Text(tr('apply')),
                 ),
