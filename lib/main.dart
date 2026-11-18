@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(const LiveWallpaperApp());
@@ -70,6 +72,7 @@ class _MainScreenState extends State<MainScreen> {
   String category = 'All';
   String language = 'English';
   final Set<String> favorites = {};
+  File? selectedImage;
 
   final categories = [
     'All', '2D', '3D', 'Nature', 'Rain',
@@ -466,14 +469,32 @@ class _MainScreenState extends State<MainScreen> {
             ),
             const SizedBox(height: 25),
             FilledButton.icon(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(tr('coming'))),
+              onPressed: () async {
+                final picker = ImagePicker();
+                final pickedFile = await picker.pickImage(
+                  source: ImageSource.gallery,
                 );
+                if (pickedFile != null && mounted) {
+                  setState(() {
+                    selectedImage = File(pickedFile.path);
+                  });
+                }
               },
               icon: const Icon(Icons.add_photo_alternate),
               label: const Text('Choose Photo'),
             ),
+            if (selectedImage != null) ...[
+              const SizedBox(height: 16),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(
+                  selectedImage!,
+                  height: 220,
+                  width: double.infinity,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
           ],
         ),
       ),
