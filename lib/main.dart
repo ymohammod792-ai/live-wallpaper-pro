@@ -965,138 +965,193 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget createPage() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+      padding: const EdgeInsets.all(18),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Icon(Icons.wallpaper, size: 85, color: accent),
-          const SizedBox(height: 20),
-          Text(
-            tr('create'),
-            style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          Container(
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: const Color(0xFFD6B15E).withValues(alpha: 0.6),
+              ),
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF302044),
+                  Color(0xFF171320),
+                  Color(0xFF0D0B13),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  width: 76,
+                  height: 76,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [Color(0xFFD6B15E), Color(0xFF8B5CF6)],
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.wallpaper_rounded,
+                    size: 39,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  tr('create'),
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 9),
+                const Text(
+                  'Create your own wallpaper using photos, videos and effects.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white70, height: 1.5),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          final pickedFile = await ImagePicker().pickImage(
+                            source: ImageSource.gallery,
+                          );
+                          if (pickedFile != null && mounted) {
+                            final oldController = videoController;
+                            setState(() {
+                              selectedImage = File(pickedFile.path);
+                              videoController = null;
+                              savedVideoPath = null;
+                            });
+                            await oldController?.dispose();
+                          }
+                        },
+                        icon: const Icon(Icons.add_photo_alternate_rounded),
+                        label: const Text('Choose Photo'),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          final pickedFile = await ImagePicker().pickVideo(
+                            source: ImageSource.gallery,
+                          );
+                          if (pickedFile == null || !mounted) return;
+
+                          final controller = VideoPlayerController.file(
+                            File(pickedFile.path),
+                          );
+                          try {
+                            final savedPath =
+                                await saveWallpaperVideo(pickedFile.path);
+                            await controller.initialize();
+                            if (!mounted) {
+                              await controller.dispose();
+                              return;
+                            }
+                            final oldController = videoController;
+                            setState(() {
+                              selectedImage = null;
+                              videoController = controller;
+                              savedVideoPath = savedPath;
+                            });
+                            await oldController?.dispose();
+                          } catch (e) {
+                            await controller.dispose();
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Could not load this video'),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        icon: const Icon(Icons.video_library_rounded),
+                        label: const Text('Choose Video'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 10),
-          const Text(
-            'Create your own wallpaper using photos, videos and effects.',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white60),
-          ),
-          const SizedBox(height: 25),
-
-          FilledButton.icon(
-            onPressed: () async {
-              final pickedFile = await ImagePicker().pickImage(
-                source: ImageSource.gallery,
-              );
-
-              if (pickedFile != null && mounted) {
-                final oldController = videoController;
-                setState(() {
-                  selectedImage = File(pickedFile.path);
-                  videoController = null;
-                });
-                await oldController?.dispose();
-              }
-            },
-            icon: const Icon(Icons.add_photo_alternate),
-            label: const Text('Choose Photo'),
-          ),
-
-          const SizedBox(height: 12),
-
-          FilledButton.icon(
-            onPressed: () async {
-              final pickedFile = await ImagePicker().pickVideo(
-                source: ImageSource.gallery,
-              );
-
-              if (pickedFile == null || !mounted) return;
-
-              final controller = VideoPlayerController.file(
-                File(pickedFile.path),
-              );
-
-              try {
-                final savedPath = await saveWallpaperVideo(pickedFile.path);
-                await controller.initialize();
-
-                if (!mounted) {
-                  await controller.dispose();
-                  return;
-                }
-
-                final oldController = videoController;
-                setState(() {
-                  selectedImage = null;
-                  videoController = controller;
-                  savedVideoPath = savedPath;
-                });
-                await oldController?.dispose();
-              } catch (e) {
-                await controller.dispose();
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Could not load this video')),
-                  );
-                }
-              }
-            },
-            icon: const Icon(Icons.video_library),
-            label: const Text('Choose Video'),
-          ),
-
           if (selectedImage != null) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: 22),
+            sectionTitle('Photo Preview'),
             ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(18),
               child: Image.file(
                 selectedImage!,
-                height: 220,
+                height: 250,
                 width: double.infinity,
                 fit: BoxFit.contain,
               ),
             ),
           ],
-
           if (videoController != null &&
               videoController!.value.isInitialized) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: 22),
+            sectionTitle('Video Preview'),
             ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(18),
               child: AspectRatio(
                 aspectRatio: videoController!.value.aspectRatio,
                 child: VideoPlayer(videoController!),
               ),
             ),
-            IconButton(
-              onPressed: () {
-                final controller = videoController!;
-                setState(() {
-                  if (controller.value.isPlaying) {
-                    controller.pause();
-                  } else {
-                    controller.play();
-                  }
-                });
-              },
-              icon: Icon(
-                videoController!.value.isPlaying
-                    ? Icons.pause_circle
-                    : Icons.play_circle,
-                size: 45,
-                color: accent,
+            Center(
+              child: IconButton(
+                onPressed: () {
+                  final controller = videoController!;
+                  setState(() {
+                    if (controller.value.isPlaying) {
+                      controller.pause();
+                    } else {
+                      controller.play();
+                    }
+                  });
+                },
+                icon: Icon(
+                  videoController!.value.isPlaying
+                      ? Icons.pause_circle_filled
+                      : Icons.play_circle_fill,
+                  size: 54,
+                  color: accent,
+                ),
               ),
             ),
           ],
-
           if (savedVideoPath != null) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
             SizedBox(
-              width: double.infinity,
+              height: 54,
               child: FilledButton.icon(
                 onPressed: setAsLiveWallpaper,
-                icon: const Icon(Icons.wallpaper),
-                label: const Text('Set Live Wallpaper'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFFD6B15E),
+                  foregroundColor: const Color(0xFF08070D),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                icon: const Icon(Icons.wallpaper_rounded),
+                label: const Text(
+                  'Set Live Wallpaper',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],
@@ -1104,7 +1159,6 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
-
 
   Future<void> setAsLiveWallpaper() async {
     if (savedVideoPath == null) return;
