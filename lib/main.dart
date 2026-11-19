@@ -667,50 +667,140 @@ class _MainScreenState extends State<MainScreen> {
           onTap: () => showPreview(wallpaper),
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: const Color(0xFFD6B15E).withValues(alpha: 0.65),
+                width: 1.1,
+              ),
               gradient: LinearGradient(
                 colors: wallpaper.colors,
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-            ),
-            child: Stack(
-              children: [
-                Center(
-                  child: Icon(wallpaper.icon, size: 75, color: Colors.white30),
-                ),
-                Positioned(
-                  top: 6,
-                  right: 6,
-                  child: IconButton(
-                    onPressed: () => toggleFavorite(wallpaper),
-                    icon: Icon(
-                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite ? Colors.pinkAccent : Colors.white,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 12,
-                  bottom: 12,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        wallpaper.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        wallpaper.category,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.18),
+                  blurRadius: 12,
+                  offset: const Offset(0, 5),
                 ),
               ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(19),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Center(
+                      child: Icon(
+                        wallpaper.icon,
+                        size: 82,
+                        color: Colors.white.withValues(alpha: 0.22),
+                      ),
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withValues(alpha: 0.05),
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.82),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 10,
+                    left: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.38),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: const Color(0xFFD6B15E)
+                              .withValues(alpha: 0.55),
+                        ),
+                      ),
+                      child: Text(
+                        wallpaper.category,
+                        style: const TextStyle(
+                          color: Color(0xFFFFD978),
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 5,
+                    right: 5,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.35),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        onPressed: () => toggleFavorite(wallpaper),
+                        icon: Icon(
+                          isFavorite
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: isFavorite
+                              ? Colors.pinkAccent
+                              : Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 12,
+                    right: 10,
+                    bottom: 12,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          wallpaper.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 7),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.play_circle_fill,
+                              color: Color(0xFFFFD978),
+                              size: 17,
+                            ),
+                            const SizedBox(width: 5),
+                            const Text(
+                              'Preview Wallpaper',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
