@@ -10,9 +10,9 @@ void main() {
   runApp(const LiveWallpaperApp());
 }
 
-const bg = Color(0xFF090D18);
-const panel = Color(0xFF151D2E);
-const accent = Color(0xFF8B6CFF);
+const bg = Color(0xFF08070D);
+const panel = Color(0xFF171320);
+const accent = Color(0xFFD6B15E);
 
 class Wallpaper {
   final String title;
@@ -323,53 +323,159 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget featuredCard() {
     final wallpaper = wallpapers[0];
+
     return GestureDetector(
       onTap: () => showPreview(wallpaper),
       child: Container(
-        height: 205,
+        height: 220,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: accent.withOpacity(0.75),
+            width: 1.3,
+          ),
           gradient: LinearGradient(
             colors: wallpaper.colors,
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-        ),
-        child: Stack(
-          children: [
-            const Center(
-              child: Icon(
-                Icons.blur_circular,
-                size: 105,
-                color: Colors.white24,
-              ),
-            ),
-            Positioned(
-              left: 18,
-              bottom: 18,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'GALAXY COLLECTION',
-                    style: TextStyle(letterSpacing: 1.5, fontSize: 11),
-                  ),
-                  Text(
-                    wallpaper.title,
-                    style: const TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Positioned(
-              right: 18,
-              bottom: 18,
-              child: Icon(Icons.play_circle_fill, size: 38),
+          boxShadow: [
+            BoxShadow(
+              color: accent.withOpacity(0.18),
+              blurRadius: 22,
+              spreadRadius: 1,
+              offset: const Offset(0, 8),
             ),
           ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(23),
+          child: Stack(
+            children: [
+              const Positioned(
+                right: -20,
+                top: -35,
+                child: Icon(
+                  Icons.blur_circular,
+                  size: 180,
+                  color: Colors.white10,
+                ),
+              ),
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.78),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 16,
+                left: 16,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 13,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.35),
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(
+                      color: accent.withOpacity(0.7),
+                    ),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.workspace_premium,
+                        color: accent,
+                        size: 15,
+                      ),
+                      SizedBox(width: 6),
+                      Text(
+                        'FEATURED',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 18,
+                bottom: 20,
+                right: 75,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'PREMIUM COLLECTION',
+                      style: TextStyle(
+                        color: accent,
+                        letterSpacing: 1.8,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 7),
+                    Text(
+                      wallpaper.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    const Text(
+                      'Discover your perfect screen',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                right: 18,
+                bottom: 22,
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: accent,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: accent.withOpacity(0.35),
+                        blurRadius: 14,
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.black,
+                    size: 32,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
