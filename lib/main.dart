@@ -253,31 +253,159 @@ class _MainScreenState extends State<MainScreen> {
       children: [
         Row(
           children: [
-            const Icon(Icons.blur_on, color: accent, size: 34),
-            const SizedBox(width: 10),
-            const Expanded(
-              child: Text(
-                'LIVE WALLPAPER PRO',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
-                  fontSize: 16,
+            Container(
+              width: 46,
+              height: 46,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFFD6B15E),
+                    Color(0xFF8B6CFF),
+                  ],
                 ),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: accent.withValues(alpha: 0.22),
+                    blurRadius: 14,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.blur_on_rounded,
+                color: Colors.black,
+                size: 29,
               ),
             ),
-            IconButton(
-              onPressed: () => setState(() => page = 4),
-              icon: const Icon(Icons.settings_outlined),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'LIVE WALLPAPER',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.1,
+                      fontSize: 15,
+                    ),
+                  ),
+                  SizedBox(height: 3),
+                  Text(
+                    'PRO EDITION',
+                    style: TextStyle(
+                      color: accent,
+                      letterSpacing: 2.0,
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: panel,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: accent.withValues(alpha: 0.25),
+                ),
+              ),
+              child: IconButton(
+                onPressed: () => setState(() => page = 4),
+                icon: const Icon(
+                  Icons.settings_outlined,
+                  color: accent,
+                ),
+                tooltip: 'Settings',
+              ),
             ),
           ],
         ),
-        const SizedBox(height: 25),
-        Text(
-          tr('welcome'),
-          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        const SizedBox(height: 28),
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF211832),
+                Color(0xFF171320),
+                Color(0xFF10101A),
+              ],
+            ),
+            border: Border.all(
+              color: accent.withValues(alpha: 0.28),
+            ),
+          ),
+          child: Stack(
+            children: [
+              const Positioned(
+                right: -12,
+                top: -15,
+                child: Icon(
+                  Icons.auto_awesome,
+                  size: 100,
+                  color: Color(0x18D6B15E),
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 11,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: accent.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      '✦ PREMIUM EXPERIENCE',
+                      style: TextStyle(
+                        color: accent,
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    tr('welcome'),
+                    style: const TextStyle(
+                      fontSize: 27,
+                      fontWeight: FontWeight.bold,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 9),
+                  Text(
+                    tr('subtitle'),
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 13,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Container(
+                    width: 48,
+                    height: 3,
+                    decoration: BoxDecoration(
+                      color: accent,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 8),
-        Text(tr('subtitle'), style: const TextStyle(color: Colors.white60)),
         const SizedBox(height: 24),
         sectionTitle(tr('featured')),
         featuredCard(),
