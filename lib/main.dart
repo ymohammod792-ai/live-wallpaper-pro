@@ -926,27 +926,127 @@ class _MainScreenState extends State<MainScreen> {
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
-        Text(
-          tr('favorites'),
-          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: const Color(0xFFD6B15E).withValues(alpha: 0.55),
+            ),
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xFF302044),
+                Color(0xFF171320),
+                Color(0xFF0D0B13),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 58,
+                height: 58,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [Color(0xFFD6B15E), Color(0xFF8B5CF6)],
+                  ),
+                ),
+                child: const Icon(
+                  Icons.favorite_rounded,
+                  color: Colors.white,
+                  size: 29,
+                ),
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tr('favorites'),
+                      style: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    const Text(
+                      'YOUR PERSONAL COLLECTION',
+                      style: TextStyle(
+                        color: Color(0xFFD6B15E),
+                        fontSize: 10,
+                        letterSpacing: 1.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                '${saved.length}',
+                style: const TextStyle(
+                  color: Color(0xFFD6B15E),
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 25),
+        const SizedBox(height: 24),
         if (saved.isEmpty)
-          Center(
+          Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 45,
+              horizontal: 20,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFF171320),
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.35),
+              ),
+            ),
             child: Column(
               children: [
-                const SizedBox(height: 80),
-                const Icon(
-                  Icons.favorite_border,
-                  size: 65,
-                  color: Colors.white38,
+                Container(
+                  width: 90,
+                  height: 90,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.12),
+                    border: Border.all(
+                      color: const Color(0xFFD6B15E).withValues(alpha: 0.5),
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.favorite_border_rounded,
+                    size: 45,
+                    color: Color(0xFFD6B15E),
+                  ),
                 ),
-                const SizedBox(height: 15),
-                Text(tr('empty')),
-                const SizedBox(height: 8),
+                const SizedBox(height: 20),
+                Text(
+                  tr('empty'),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 Text(
                   tr('emptySub'),
-                  style: const TextStyle(color: Colors.white54),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white54,
+                    fontSize: 13,
+                  ),
                 ),
               ],
             ),
