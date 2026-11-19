@@ -61,6 +61,20 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  assets:
+    - assets/wallpapers/islamic/
+    - assets/wallpapers/animation_2d/
+    - assets/wallpapers/fantasy_3d/
+    - assets/wallpapers/action/
+    - assets/wallpapers/nature/
+    - assets/wallpapers/cute_girls/
+    - assets/wallpapers/beautiful_girls/
+    - assets/wallpapers/anime_girls/
+    - assets/wallpapers/fashion_glamour/
+    - assets/wallpapers/romantic_couple/
+    - assets/wallpapers/gaming/
+    - assets/wallpapers/space_universe/
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

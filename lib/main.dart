@@ -19,8 +19,9 @@ class Wallpaper {
   final String category;
   final IconData icon;
   final List<Color> colors;
+  final String? imageUrl;
 
-  const Wallpaper(this.title, this.category, this.icon, this.colors);
+  const Wallpaper(this.title, this.category, this.icon, this.colors, {this.imageUrl});
 }
 
 const wallpapers = [
@@ -56,6 +57,26 @@ const wallpapers = [
     Color(0xFF1554A0),
     Color(0xFF100C37),
   ]),
+
+  Wallpaper('Black Hole', 'Space & Universe', Icons.blur_circular,
+    [Color(0xFF32116B), Color(0xFF071A48)],
+    imageUrl: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=900'),
+  Wallpaper('Earth From Space', 'Space & Universe', Icons.public,
+    [Color(0xFF126E91), Color(0xFF17134D)],
+    imageUrl: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=900'),
+  Wallpaper('Cosmic Galaxy', 'Space & Universe', Icons.stars,
+    [Color(0xFF1554A0), Color(0xFF100C37)],
+    imageUrl: 'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=900'),
+  Wallpaper('Gaming Setup', 'Gaming', Icons.sports_esports,
+    [Color(0xFF32116B), Color(0xFF071A48)],
+    imageUrl: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=900'),
+  Wallpaper('Gaming Arena', 'Gaming', Icons.gamepad,
+    [Color(0xFF075B42), Color(0xFF071D25)],
+    imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=900'),
+  Wallpaper('RGB Gaming', 'Gaming', Icons.videogame_asset,
+    [Color(0xFF7137A8), Color(0xFF101B50)],
+    imageUrl: 'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=900'),
+
 ];
 
 class LiveWallpaperApp extends StatelessWidget {
@@ -106,13 +127,26 @@ class _MainScreenState extends State<MainScreen> {
 
   final categories = [
     'All',
+    'Islamic',
+    'Animation',
     '2D',
     '3D',
+    'Movies',
+    'Action',
+    'Funny',
     'Nature',
-    'Rain',
     'Galaxy',
+    'Space',
+    'Space & Universe',
+    'Gaming',
+    'Rain',
     'Horror',
     'Abstract',
+    'Cute Girls',
+    'Beautiful Girls',
+    'Anime Girls',
+    'Fashion & Glamour',
+    'Romantic Couple',
   ];
 
   final translations = {
@@ -498,6 +532,15 @@ class _MainScreenState extends State<MainScreen> {
           borderRadius: BorderRadius.circular(23),
           child: Stack(
             children: [
+              if (wallpaper.imageUrl != null)
+                Positioned.fill(
+                  child: Image.network(
+                    wallpaper.imageUrl!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const SizedBox(),
+                  ),
+                ),
+
               const Positioned(
                 right: -20,
                 top: -35,
@@ -803,11 +846,21 @@ class _MainScreenState extends State<MainScreen> {
                 children: [
                   Positioned.fill(
                     child: Center(
-                      child: Icon(
-                        wallpaper.icon,
-                        size: 82,
-                        color: Colors.white.withValues(alpha: 0.22),
-                      ),
+                      child: wallpaper.imageUrl != null
+                        ? Image.network(
+                            wallpaper.imageUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Icon(
+                              wallpaper.icon,
+                              size: 82,
+                              color: Colors.white38,
+                            ),
+                          )
+                        : Icon(
+                            wallpaper.icon,
+                            size: 82,
+                            color: Colors.white.withValues(alpha: 0.22),
+                          ),
                     ),
                   ),
                   Positioned.fill(
@@ -1520,7 +1573,21 @@ class _MainScreenState extends State<MainScreen> {
                       end: Alignment.bottomRight,
                     ),
                   ),
-                  child: Icon(wallpaper.icon, size: 100, color: Colors.white38),
+                  child: wallpaper.imageUrl != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(18),
+                          child: Image.network(
+                            wallpaper.imageUrl!,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Icon(
+                              wallpaper.icon,
+                              size: 100,
+                              color: Colors.white38,
+                            ),
+                          ),
+                        )
+                      : Icon(wallpaper.icon, size: 100, color: Colors.white38),
                 ),
                 const SizedBox(height: 15),
                 Text(wallpaper.title, style: const TextStyle(fontSize: 18)),
