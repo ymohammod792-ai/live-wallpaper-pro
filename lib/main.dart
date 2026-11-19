@@ -635,11 +635,87 @@ class _MainScreenState extends State<MainScreen> {
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
-        Text(
-          tr('gallery'),
-          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+        Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: const Color(0xFFD6B15E).withValues(alpha: 0.55),
+            ),
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xFF211832),
+                Color(0xFF171320),
+                Color(0xFF0D0B13),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.16),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFFD6B15E),
+                      Color(0xFF8B5CF6),
+                    ],
+                  ),
+                ),
+                child: const Icon(
+                  Icons.photo_library_rounded,
+                  color: Colors.white,
+                  size: 27,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  tr('gallery'),
+                  style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 13,
+                  vertical: 9,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD6B15E).withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: const Color(0xFFD6B15E).withValues(alpha: 0.6),
+                  ),
+                ),
+                child: Text(
+                  '${filtered.length}',
+                  style: const TextStyle(
+                    color: Color(0xFFFFD978),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 22),
+        sectionTitle(tr('categories')),
         SizedBox(
           height: 48,
           child: ListView(
