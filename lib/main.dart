@@ -419,8 +419,26 @@ class _MainScreenState extends State<MainScreen> {
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: ChoiceChip(
-                  label: Text(item),
+                  label: Text(
+                    item,
+                    style: TextStyle(
+                      color: category == item
+                          ? const Color(0xFF08070D)
+                          : Colors.white70,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   selected: category == item,
+                  selectedColor: const Color(0xFFD6B15E),
+                  backgroundColor: const Color(0xFF171320),
+                  side: BorderSide(
+                    color: category == item
+                        ? const Color(0xFFFFD978)
+                        : const Color(0xFF8B5CF6).withValues(alpha: 0.45),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
+                  ),
                   onSelected: (_) {
                     setState(() {
                       category = item;
@@ -630,8 +648,26 @@ class _MainScreenState extends State<MainScreen> {
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: ChoiceChip(
-                  label: Text(item),
+                  label: Text(
+                    item,
+                    style: TextStyle(
+                      color: category == item
+                          ? const Color(0xFF08070D)
+                          : Colors.white70,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   selected: category == item,
+                  selectedColor: const Color(0xFFD6B15E),
+                  backgroundColor: const Color(0xFF171320),
+                  side: BorderSide(
+                    color: category == item
+                        ? const Color(0xFFFFD978)
+                        : const Color(0xFF8B5CF6).withValues(alpha: 0.45),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
+                  ),
                   onSelected: (_) => setState(() => category = item),
                 ),
               );
