@@ -101,7 +101,7 @@ class MainActivity : FlutterActivity() {
                                     connection.connectTimeout = 20000
                                     connection.readTimeout = 30000
 
-                                    val imageFile = java.io.File(filesDir, "image_live_wallpaper.jpg")
+                                    val imageFile = java.io.File(filesDir, "image_live_wallpaper_${System.currentTimeMillis()}.img")
 
                                     connection.getInputStream().use { input ->
                                         java.io.FileOutputStream(imageFile).use { output ->

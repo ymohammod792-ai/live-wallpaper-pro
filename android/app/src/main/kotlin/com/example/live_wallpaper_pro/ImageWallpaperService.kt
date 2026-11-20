@@ -63,7 +63,13 @@ class ImageWallpaperService : WallpaperService() {
 
         override fun onVisibilityChanged(isVisible: Boolean) {
             visible = isVisible
-            if (visible) startAnimation() else stopAnimation()
+            if (visible) {
+                loadWallpaper()
+                resetParticles()
+                startAnimation()
+            } else {
+                stopAnimation()
+            }
         }
 
         private fun loadWallpaper() {
