@@ -1543,10 +1543,40 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+
+  Future<void> applyImageWallpaper(Wallpaper wallpaper, String target) async {
+    if (wallpaper.imageUrl == null) return;
+
+    try {
+      await const MethodChannel('live_wallpaper_pro/wallpaper')
+          .invokeMethod('setImageWallpaper', {
+        'url': wallpaper.imageUrl,
+        'target': target,
+      });
+
+      if (!mounted) return;
+
+      final message = target == 'home'
+          ? 'Home Screen wallpaper applied successfully!'
+          : target == 'lock'
+              ? 'Lock Screen wallpaper applied successfully!'
+              : 'Both wallpapers applied successfully!';
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not apply wallpaper: $e')),
+      );
+    }
+  }
+
   void showPreview(Wallpaper wallpaper) {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return Dialog(
           backgroundColor: panel,
           child: Padding(
@@ -1587,19 +1617,57 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                           ),
                         )
-                      : Icon(wallpaper.icon, size: 100, color: Colors.white38),
+                      : Icon(
+                          wallpaper.icon,
+                          size: 100,
+                          color: Colors.white38,
+                        ),
                 ),
                 const SizedBox(height: 15),
-                Text(wallpaper.title, style: const TextStyle(fontSize: 18)),
-                const SizedBox(height: 15),
-                FilledButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(this.context)
-                        .showSnackBar(SnackBar(content: Text(tr('coming'))));
-                  },
-                  child: Text(tr('apply')),
+                Text(
+                  wallpaper.title,
+                  style: const TextStyle(fontSize: 18),
                 ),
+                const SizedBox(height: 15),
+                if (wallpaper.imageUrl != null) ...[
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: () {
+                        Navigator.pop(dialogContext);
+                        applyImageWallpaper(wallpaper, 'home');
+                      },
+                      icon: const Icon(Icons.home_rounded),
+                      label: const Text('Home Screen'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: () {
+                        Navigator.pop(dialogContext);
+                        applyImageWallpaper(wallpaper, 'lock');
+                      },
+                      icon: const Icon(Icons.lock_rounded),
+                      label: const Text('Lock Screen'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: () {
+                        Navigator.pop(dialogContext);
+                        applyImageWallpaper(wallpaper, 'both');
+                      },
+                      icon: const Icon(Icons.wallpaper_rounded),
+                      label: const Text('Both Screens'),
+                    ),
+                  ),
+                ] else
+                  FilledButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    child: const Text('Close'),
+                  ),
               ],
             ),
           ),
@@ -1607,4 +1675,5 @@ class _MainScreenState extends State<MainScreen> {
       },
     );
   }
+
 }
