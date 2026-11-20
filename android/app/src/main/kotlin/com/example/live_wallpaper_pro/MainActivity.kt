@@ -88,6 +88,68 @@ class MainActivity : FlutterActivity() {
                             }.start()
                         }
                     }
+
+                    "setImageLiveWallpaper" -> {
+                        val imageUrl = call.argument<String>("url")
+
+                        if (imageUrl.isNullOrBlank()) {
+                            result.error("NO_URL", "Wallpaper image URL is missing", null)
+                        } else {
+                            Thread {
+                                try {
+                                    val connection = URL(imageUrl).openConnection()
+                                    connection.connectTimeout = 20000
+                                    connection.readTimeout = 30000
+
+                                    val imageFile = java.io.File(filesDir, "image_live_wallpaper.jpg")
+
+                                    connection.getInputStream().use { input ->
+                                        java.io.FileOutputStream(imageFile).use { output ->
+                                            input.copyTo(output)
+                                        }
+                                    }
+
+                                    if (!imageFile.exists() || imageFile.length() == 0L) {
+                                        throw Exception("Wallpaper image could not be saved")
+                                    }
+
+                                    val effectsEnabled = call.argument<Boolean>("effectsEnabled") ?: true
+                                    val effectType = call.argument<String>("effectType") ?: "Galaxy"
+                                    val effectSpeed = (call.argument<Double>("speed") ?: 1.0).toFloat()
+                                        .coerceIn(0.3f, 3.0f)
+
+                                    getSharedPreferences("wallpaper_settings", MODE_PRIVATE)
+                                        .edit()
+                                        .putString("image_live_path", imageFile.absolutePath)
+                                        .putBoolean("image_effect_enabled", effectsEnabled)
+                                        .putString("image_effect_type", effectType)
+                                        .putFloat("image_effect_speed", effectSpeed)
+                                        .apply()
+
+                                    runOnUiThread {
+                                        try {
+                                            val intent = Intent(
+                                                WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER
+                                            )
+                                            intent.putExtra(
+                                                WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
+                                                ComponentName(this, ImageWallpaperService::class.java)
+                                            )
+                                            startActivity(intent)
+                                            result.success(true)
+                                        } catch (e: Exception) {
+                                            result.error("IMAGE_LIVE_ERROR", e.message, null)
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    runOnUiThread {
+                                        result.error("IMAGE_LIVE_ERROR", e.message, null)
+                                    }
+                                }
+                            }.start()
+                        }
+                    }
+
                     else -> result.notImplemented()
                 }
             }

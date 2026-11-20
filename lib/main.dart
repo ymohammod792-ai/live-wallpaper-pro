@@ -1573,6 +1573,77 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  Future<void> applyImageLiveWallpaper(Wallpaper wallpaper, bool effectsEnabled, String effectType, double speed) async {
+    if (wallpaper.imageUrl == null) return;
+    try {
+      await const MethodChannel("live_wallpaper_pro/wallpaper").invokeMethod("setImageLiveWallpaper", {
+        "url": wallpaper.imageUrl,
+        "effectsEnabled": effectsEnabled,
+        "effectType": effectType,
+        "speed": speed,
+      });
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Opening Animated Live Wallpaper setup...")));
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Could not start Live Wallpaper: $e")));
+    }
+  }
+
+  void showImageLiveSettings(Wallpaper wallpaper) {
+    bool effectsEnabled = true;
+    String effectType = "Galaxy";
+    double speed = 1.0;
+    showDialog(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: panel,
+          title: const Text("Animated Wallpaper Settings"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SwitchListTile(
+                title: const Text("Effects ON / OFF"),
+                value: effectsEnabled,
+                onChanged: (v) => setDialogState(() => effectsEnabled = v),
+              ),
+              DropdownButtonFormField<String>(
+                value: effectType,
+                decoration: const InputDecoration(labelText: "Choose Effect"),
+                items: const [
+                  DropdownMenuItem(value: "Galaxy", child: Text("Galaxy / Stars")),
+                  DropdownMenuItem(value: "Rain", child: Text("Rain")),
+                  DropdownMenuItem(value: "Snow", child: Text("Snow")),
+                  DropdownMenuItem(value: "Particles", child: Text("Particles")),
+                ],
+                onChanged: effectsEnabled ? (v) { if (v != null) setDialogState(() => effectType = v); } : null,
+              ),
+              Text("Effect Speed: ${speed.toStringAsFixed(1)}x"),
+              Slider(
+                min: 0.3,
+                max: 3.0,
+                divisions: 27,
+                value: speed,
+                onChanged: effectsEnabled ? (v) => setDialogState(() => speed = v) : null,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text("Cancel")),
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                applyImageLiveWallpaper(wallpaper, effectsEnabled, effectType, speed);
+              },
+              child: const Text("Set Live Wallpaper"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void showPreview(Wallpaper wallpaper) {
     showDialog(
       context: context,
@@ -1630,6 +1701,18 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 const SizedBox(height: 15),
                 if (wallpaper.imageUrl != null) ...[
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: () {
+                        Navigator.pop(dialogContext);
+                        showImageLiveSettings(wallpaper);
+                      },
+                      icon: const Icon(Icons.auto_awesome),
+                      label: const Text("Animated Live Wallpaper"),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton.icon(

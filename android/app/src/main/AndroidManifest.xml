@@ -46,6 +46,20 @@
                 android:resource="@xml/wallpaper" />
         </service>
 
+
+        <service
+            android:name=".ImageWallpaperService"
+            android:label="Image Live Wallpaper"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/image_wallpaper" />
+        </service>
+
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
