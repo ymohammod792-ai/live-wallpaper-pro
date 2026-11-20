@@ -14,6 +14,13 @@ import kotlin.random.Random
 
 class ImageWallpaperService : WallpaperService() {
 
+    private data class Particle(
+        var x: Float,
+        var y: Float,
+        var size: Float,
+        var speed: Float
+    )
+
     override fun onCreateEngine(): Engine = ImageEngine()
 
     inner class ImageEngine : Engine() {
@@ -25,12 +32,6 @@ class ImageWallpaperService : WallpaperService() {
         private var frameWidth = 0
         private var frameHeight = 0
 
-        private data class Particle(
-            var x: Float,
-            var y: Float,
-            var size: Float,
-            var speed: Float
-        )
 
         private val frameRunnable = object : Runnable {
             override fun run() {
